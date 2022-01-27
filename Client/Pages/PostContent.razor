@@ -1,0 +1,28 @@
+﻿@page "/posts/{url}"
+@inject MyBoost.Client.Services.Interfaces.IPostService PostService
+
+@if (CurrentPost == null)
+{
+    <span>Getting the post from service...</span>
+}
+else
+{
+    <MudText Typo="Typo.h6">@CurrentPost.Title</MudText>
+
+    <div>
+        @CurrentPost.Content
+    </div>
+    <MudText Typo="Typo.h6">@CurrentPost.DateCreated</MudText>
+}
+
+@code {
+    private MyBoost.Shared.Data.Post CurrentPost;
+
+    [Parameter]
+    public string Url { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        CurrentPost = await PostService.GetPostByUrl(Url);
+    }
+}

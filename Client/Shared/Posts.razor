@@ -1,0 +1,52 @@
+﻿@using MyBoost.Shared.Data
+@inject MyBoost.Client.Services.Interfaces.IPostService PostService
+@using System.Security.Claims
+
+<AuthorizeView>
+    <Authorized>
+        The user: @context.User.FindFirst(ClaimTypes.Name).Value is authorized
+    </Authorized>
+    <NotAuthorized>
+        The user is not authorized
+    </NotAuthorized>
+</AuthorizeView>
+<AuthorizeView>
+    <Authorized>
+    @foreach (var post in PostsList)
+    {
+    <MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
+        <MudGrid>
+            <MudItem xs="12" sm="6" md="4">
+                <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;">
+                    <div>
+                        <div style="margin: 20px;">
+                            <MudText Typo="Typo.h5" Align="Align.Start"><b>@post.Title</b></MudText>
+                        </div>
+                        <div>
+                            <MudText Typo="Typo.subtitle1" Align="Align.Start">@post.Description</MudText>
+                        </div>
+                        <div>
+                            <MudButton Variant="Variant.Filled" Style="@($"color:{Colors.LightGreen.Accent3}; background:{Colors.Shades.White};")">
+                                <MudLink Href="@($"/posts/{post.Url}")">Read more...</MudLink>
+                            </MudButton>
+                            @*<a href="/posts/@post.Url">Read more...</a>*@
+                        </div>
+                    </div>
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+    </MudContainer>
+    }
+    </Authorized>
+    <NotAuthorized>
+        <MudText Typo="Typo.h5">You are not authorized to see posts!</MudText>
+    </NotAuthorized>
+</AuthorizeView>
+@code {
+    private List<Post> PostsList = new List<Post>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        PostsList = await PostService.GetPosts();
+    }
+}

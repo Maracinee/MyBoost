@@ -1,0 +1,13 @@
+﻿@page "/"
+@using System.Security.Claims
+@using MyBoost.Shared
+<AuthorizeView>
+    <Authorized>
+        <MudText Typo="Typo.h6">Hello, @context.User.FindFirst(ClaimTypes.Name).Value!</MudText>
+        <MudText Typo="Typo.h6">Posts</MudText>
+    </Authorized>
+    <NotAuthorized>
+        <MudText Typo="Typo.h6">Posts</MudText>
+    </NotAuthorized>
+</AuthorizeView>
+<Posts />
